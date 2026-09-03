@@ -1,165 +1,90 @@
 # DocMind-AI
 
-> A Retrieval-Augmented Generation (RAG) application that lets users upload PDF documents and ask natural-language questions about their content.
-
----
-
-## Project Overview
-
-**DocMind-AI** is an AI-powered document question-answering system built using the **Retrieval-Augmented Generation (RAG)** architecture.
-
-The application allows users to:
-
-* Upload one or more PDF documents
-* Extract text while retaining page information
-* Split documents into overlapping chunks
-* Convert chunks into semantic embeddings
-* Retrieve the most relevant chunks using similarity search
-* Filter weak matches using a similarity threshold
-* Provide the retrieved context to a Groq-hosted LLM
-* Generate answers grounded in the uploaded documents
-* View retrieved sources, page numbers, and similarity scores
-* Continue conversations using chat history
-
-The goal is to make it easier to interact with lengthy documents without manually searching through every page.
-
----
-
+> A Retrieval-Augmented Generation (RAG) application that lets you upload PDF documents and ask natural-language questions about their content.
+>
+> ---
 ## Live Demo
 https://docmind-ai-ldrjrqgkyrdneknzgsw6kp.streamlit.app/
 
 ---
 
-#  Features
+## Overview
 
-###  Multiple PDF Uploads
+DocMind-AI is an AI-powered document question-answering system built on a Retrieval-Augmented Generation (RAG) architecture. It lets you interact with lengthy PDFs without manually searching through every page.
 
-Upload one or more PDF documents and process their content for question answering.
+With DocMind-AI you can:
 
-###  Page-Aware Text Extraction
-
-Text is extracted from PDFs while preserving page information so retrieved answers can be traced back to their source pages.
-
-###  Overlapping Chunking
-
-Large documents are divided into smaller overlapping text chunks to make retrieval more effective.
-
-###  Semantic Embeddings
-
-Each document chunk is converted into a numerical vector using a **Sentence Transformer** model.
-
-###  Similarity-Based Retrieval
-
-The system compares the user's question with document chunks and retrieves the most relevant content.
-
-### Top-K Retrieval
-
-Only the highest-ranking chunks are selected as potential context for the LLM.
-
-### Similarity Threshold
-
-Low-relevance chunks can be filtered out using a similarity threshold, reducing the chance of generating answers from unrelated document content.
-
-### Grounded Question Answering
-
-The LLM receives the retrieved document context and generates an answer based on that context.
-
-### Chat History
-
-Previous questions and answers are maintained within the Streamlit session.
-
-### Source Visibility
-
-Retrieved chunks can be displayed along with their page numbers and similarity scores.
-
-### Error Handling
-
-The application handles situations such as:
-
-* Missing API keys
-* Invalid PDF files
-* PDFs without extractable text
-* Questions with insufficient relevant context
+- Upload one or more PDF documents
+- Extract text while retaining page information
+- Split documents into overlapping chunks
+- Convert chunks into semantic embeddings
+- Retrieve the most relevant chunks via similarity search
+- Filter out weak matches using a similarity threshold
+- Generate answers grounded in the uploaded documents, via a Groq-hosted LLM
+- View retrieved sources, page numbers, and similarity scores
+- Continue the conversation using chat history
 
 ---
 
-# What is RAG?
+## Features
 
-**RAG stands for Retrieval-Augmented Generation.**
-
-A traditional LLM generates an answer primarily from the knowledge it learned during training. However, it does not automatically know the contents of a PDF that a user uploads.
-
-RAG solves this by combining:
-
-```text
-Retrieval + Generation
-```
-
-Instead of asking the LLM to answer directly, DocuRAG first searches the uploaded documents for relevant information.
-
-### Without RAG
-
-```text
-User Question
-      ↓
-     LLM
-      ↓
-   Answer
-```
-
-The model may not have access to the user's document.
-
-### With RAG
-
-```text
-User Question
-      ↓
-Find relevant document content
-      ↓
-Retrieved Context
-      ↓
-     LLM
-      ↓
-Grounded Answer
-```
-
-This allows the model to use information retrieved from the user's documents when generating its response.
+| Feature | Description |
+|---|---|
+| Multiple PDF uploads | Process one or more PDFs in a single session |
+| Page-aware extraction | Text is extracted with page numbers preserved for traceability |
+| Overlapping chunking | Large documents are split into overlapping chunks for better retrieval |
+| Semantic embeddings | Chunks are embedded using a Sentence Transformer model |
+| Similarity-based retrieval | Finds the most relevant chunks for a given question |
+| Top-K retrieval | Only the highest-ranking chunks are used as context |
+| Similarity threshold | Filters out low-relevance chunks before they reach the LLM |
+| Chat history | Keeps prior Q&A in the Streamlit session |
+| Source visibility | Shows retrieved chunks with page numbers and similarity scores |
+| Error handling | Gracefully handles missing API keys, invalid/unreadable PDFs, and low-context questions |
 
 ---
 
-# How DocMind-AI Works
+## What is RAG?
 
-The complete workflow is:
+A traditional LLM answers from what it learned during training — it has no built-in knowledge of a PDF you just uploaded. RAG solves this by combining retrieval with generation: instead of asking the model to answer directly, DocMind-AI first searches your documents for relevant content, then gives that content to the model as context.
 
-```text
+**Without RAG:**
+```
+User Question → LLM → Answer
+```
+The model has no access to your document.
+
+**With RAG:**
+```
+User Question → Retrieve relevant content → Retrieved Context → LLM → Grounded Answer
+```
+
+---
+
+## How It Works
+
+```
 PDF Upload
-     ↓
+   ↓
 Text Extraction
-     ↓
+   ↓
 Chunking with Overlap
-     ↓
+   ↓
 Sentence Transformer Embeddings
-     ↓
+   ↓
 Vector Store
-     ↓
+   ↓
 Similarity Search
-     ↓
-Top-K Retrieval
-     ↓
-Similarity Threshold
-     ↓
+   ↓
+Top-K Retrieval + Similarity Threshold
+   ↓
 Relevant Context
-     ↓
+   ↓
 Prompt Construction
-     ↓
-Groq LLM
-     ↓
+   ↓
+Groq LLM (Llama 3.3 70B)
+   ↓
 Final Answer
 ```
-
----
-
-# RAG Architecture
 
 ```mermaid
 flowchart TD
@@ -179,201 +104,49 @@ flowchart TD
 
 ---
 
-# Tech Stack
+## Tech Stack
 
-| Technology                    | Purpose                              |
-| ----------------------------- | ------------------------------------ |
-| **Python**                    | Core programming language            |
-| **Streamlit**                 | Web interface and application flow   |
-| **PyPDF2**                    | PDF text extraction                  |
-| **Sentence Transformers**     | Semantic text embeddings             |
-| **Cosine Similarity**         | Vector similarity search             |
-| **Groq API**                  | LLM inference                        |
-| **Llama 3.3 70B**             | Language model for answer generation |
-| **NumPy**                     | Numerical/vector operations          |
-| **python-dotenv**             | Environment variable management      |
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Streamlit | Web interface and application flow |
+| PyPDF2 | PDF text extraction |
+| Sentence Transformers | Semantic text embeddings |
+| Cosine Similarity | Vector similarity search |
+| Groq API | LLM inference |
+| Llama 3.3 70B | Language model for answer generation |
+| NumPy | Numerical / vector operations |
+| python-dotenv | Environment variable management |
 
 ---
 
-# Project Structure
+## Getting Started
 
-```text
-DocMind-AI/
-│
-├── app.py
-├── pdf_reader.py
-├── chunking.py
-├── embeddings.py
-├── vector_store.py
-├── retriever.py
-├── qa.py
-├── config.py
-├── .env
-├── requirements.txt
-└── README.md
+### Prerequisites
+
+- Python 3.10+
+- A Groq API key (https://console.groq.com/)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-username>/DocMind-AI.git
+cd DocMind-AI
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
----
+### Configuration
 
-# Detailed File Explanation
-
-## `app.py`
-
-The main Streamlit application.
-
-Responsible for:
-
-* Building the user interface
-* Accepting PDF uploads
-* Accepting user questions
-* Connecting the different RAG components
-* Maintaining chat history
-* Displaying answers and retrieved sources
-
----
-
-## `pdf_reader.py`
-
-Handles PDF text extraction.
-
-Its main responsibility is converting uploaded PDF files into usable text while retaining page-level information.
-
-Conceptually:
-
-```text
-PDF
- ↓
-Pages
- ↓
-Extracted Text + Page Number
-```
-
-Keeping page numbers allows the application to identify where retrieved information came from.
-
----
-
-## `chunking.py`
-
-Splits extracted document text into smaller pieces called **chunks**.
-
-Large documents cannot be treated as one enormous piece of text during retrieval. Chunking creates manageable units that can individually be embedded and searched.
-
-The chunks use overlap so that important information near a chunk boundary is less likely to be separated from its surrounding context.
-
-Example:
-
-```text
-Chunk 1:
-A B C D E F G
-
-Chunk 2:
-        F G H I J K L
-        ↑
-      overlap
-```
-
----
-
-## `embeddings.py`
-
-Generates semantic embeddings using **Sentence Transformers**.
-
-An embedding converts text into a numerical vector representation.
-
-For example:
-
-```text
-"Machine learning is a subset of AI"
-                 ↓
-        [0.12, -0.34, 0.78, ...]
-```
-
-Texts with similar meanings tend to have vectors that are closer together in embedding space.
-
-This allows the system to perform **semantic retrieval**, rather than relying only on exact keyword matches.
-
----
-
-## `vector_store.py`
-
-Responsible for storing document embeddings and performing similarity-based searches.
-
-Conceptually:
-
-```text
-Document Chunks
-      ↓
- Embedding Vectors
-      ↓
-  Vector Store
-      ↓
-Similarity Search
-```
-
-The vector store allows the application to efficiently identify chunks that are mathematically similar to the question embedding.
-
----
-
-## `retriever.py`
-
-Controls the retrieval stage of the RAG pipeline.
-
-It:
-
-1. Receives the user's question
-2. Converts/searches against its representation
-3. Performs similarity search
-4. Selects the Top-K results
-5. Applies the similarity threshold
-6. Returns relevant document chunks
-
-The similarity threshold helps prevent weakly related chunks from being passed to the LLM.
-
----
-
-## `qa.py`
-
-Handles the generation stage.
-
-It builds a prompt containing:
-
-```text
-User Question
-      +
-Retrieved Document Context
-      ↓
-Groq LLM
-      ↓
-Generated Answer
-```
-
-The prompt instructs the model to answer using the retrieved document context rather than freely relying on unrelated external knowledge.
-
----
-
-## `config.py`
-
-Contains application configuration values such as:
-
-* Chunk size
-* Chunk overlap
-* Top-K value
-* API configuration
-
-Keeping configuration separate makes the application easier to maintain and tune.
-
----
-
-## `.env`
-
-Stores sensitive configuration such as API keys.
-
-Example:
+Create a `.env` file in the project root:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
 ```
-Add `.env` to `.gitignore`:
+
+Make sure `.env` is git-ignored:
 
 ```gitignore
 .env
@@ -381,179 +154,102 @@ __pycache__/
 *.pyc
 ```
 
-#  How Retrieval Works
+### Run the app
 
-Retrieval is one of the most important stages of the RAG pipeline.
-
-Suppose a document has been divided into:
-
-```text
-Chunk 1
-Chunk 2
-Chunk 3
-...
-Chunk N
+```bash
+streamlit run app.py
 ```
 
-Each chunk is converted into an embedding.
+The app will be available at `http://localhost:8501`.
 
-When the user asks:
+---
 
-```text
-"What are the limitations of the proposed approach?"
+## Project Structure
+
+```
+DocMind-AI/
+│
+├── app.py            # Streamlit UI and app orchestration
+├── pdf_reader.py      # PDF text extraction (page-aware)
+├── chunking.py        # Overlapping text chunking
+├── embeddings.py       # Sentence Transformer embeddings
+├── vector_store.py     # Embedding storage + similarity search
+├── retriever.py        # Retrieval logic (Top-K, threshold)
+├── qa.py               # Prompt construction + Groq LLM call
+├── config.py            # App configuration (chunk size, Top-K, etc.)
+├── .env                 # API keys (not committed)
+├── requirements.txt
+└── README.md
 ```
 
-the question is represented in the same embedding space.
+### File responsibilities
 
-The system then compares the question representation with the document chunk representations.
+- `app.py` — Builds the UI, handles uploads and questions, wires together the RAG pipeline, maintains chat history, and displays answers with sources.
+- `pdf_reader.py` — Converts uploaded PDFs into text while preserving page numbers for traceability.
+- `chunking.py` — Splits extracted text into overlapping chunks so information near chunk boundaries isn't lost.
+- `embeddings.py` — Generates semantic vector embeddings for each chunk using Sentence Transformers.
+- `vector_store.py` — Stores chunk embeddings and performs similarity search against the question embedding.
+- `retriever.py` — Runs the retrieval stage: similarity search, Top-K selection, similarity threshold filtering.
+- `qa.py` — Builds the final prompt (question + retrieved context) and calls the Groq LLM to generate a grounded answer.
+- `config.py` — Centralizes tunable settings like chunk size, overlap, Top-K, and API configuration.
 
-Conceptually:
+---
 
-```text
+## How Retrieval Works
+
+Each document chunk is embedded into vector space. When you ask a question, it's embedded the same way, then compared against every chunk:
+
+```
 Question Embedding
-        ↓
+     ↓
 Compare with document embeddings
-        ↓
-Calculate similarity
-        ↓
+     ↓
+Calculate similarity (cosine)
+     ↓
 Rank chunks
-        ↓
+     ↓
 Select Top-K
-        ↓
+     ↓
 Apply similarity threshold
-        ↓
+     ↓
 Relevant Context
 ```
 
-This allows the system to retrieve content based on **meaning**, not just exact word matching.
+Because this compares meaning rather than exact words, DocMind-AI can retrieve relevant passages even when your question is phrased differently from the source text.
+
+### Top-K vs. similarity threshold
+
+- Top-K controls how many of the highest-ranked chunks are considered (e.g. the top 3).
+- Similarity threshold discards chunks below a minimum relevance score, regardless of rank.
+
+Using both together balances retrieval coverage with relevance.
 
 ---
 
-# How Embeddings Work
+## Generating the Final Answer
 
-An embedding represents text as a vector of numbers.
+The LLM never sees the raw question alone — it receives the question plus the retrieved context:
 
-For example:
-
-```text
-"Deep learning uses neural networks"
-                    ↓
-       [0.21, -0.08, 0.64, ...]
 ```
-
-A Sentence Transformer generates these vectors based on the semantic meaning of the text.
-
-Consider:
-
-```text
-Text A:
-"How does machine learning work?"
-
-Text B:
-"What is the process behind machine learning?"
-```
-
-Although the wording is different, their meanings are similar.
-
-Their embeddings should therefore be relatively close in vector space.
-
-This is why embeddings are useful for semantic document retrieval.
-
----
-
-# How Similarity Search Works
-
-After generating embeddings, the system needs a way to determine which document chunks are most relevant to a question.
-
-A common approach is **cosine similarity**.
-
-Conceptually:
-
-```text
-                    Question
-                       ↓
-                Question Vector
-                       ↓
-          ┌────────────┼────────────┐
-          ↓            ↓            ↓
-       Chunk 1      Chunk 2      Chunk 3
-       Vector       Vector       Vector
-          ↓            ↓            ↓
-       Similarity   Similarity   Similarity
-          ↓            ↓            ↓
-             Rank Results
-                  ↓
-               Top-K
-```
-
-A higher similarity score generally indicates that two vectors point in more similar directions.
-
-The retriever then uses the highest-scoring chunks as candidate context.
-
----
-
-# Why Top-K and Similarity Threshold?
-
-Two retrieval controls are used:
-
-### Top-K
-
-Top-K determines how many of the highest-ranked chunks are selected.
-
-For example:
-
-```text
-Top-K = 3
-```
-
-means the system considers the three highest-ranked chunks.
-
-### Similarity Threshold
-
-A similarity threshold removes results that are not sufficiently relevant.
-
-Conceptually:
-
-```text
-Similarity Score
-       ↓
-Is score >= threshold?
-       ↓
-   Yes       No
-    ↓         ↓
-Keep       Discard
-```
-
-Using both mechanisms helps balance **retrieval coverage** and **relevance**.
-
----
-
-#  How the LLM Generates the Final Answer
-
-The LLM does not simply receive the user's question.
-
-It receives a prompt containing the retrieved document context.
-
-Conceptually:
-
-```text
-Retrieved Context
-       +
-User Question
-       ↓
+Retrieved Context + User Question
+     ↓
 Prompt
-       ↓
-Groq API
-       ↓
-Llama 3.3 70B
-       ↓
+     ↓
+Groq API → Llama 3.3 70B
+     ↓
 Final Answer
 ```
 
-The retrieved context gives the model relevant information from the uploaded documents.
-
-This is the **Generation** part of Retrieval-Augmented Generation.
-
-The application is designed to keep the answer grounded in retrieved document context and handle cases where the requested information is not present.
+This keeps answers grounded in the uploaded documents, and the app is designed to handle cases where no sufficiently relevant context is found.
 
 ---
+
+## Error Handling
+
+DocMind-AI handles common failure cases gracefully, including:
+
+- Missing or invalid API keys
+- Invalid or corrupted PDF files
+- PDFs with no extractable text
+- Questions with insufficient relevant context in the uploaded documents
+
