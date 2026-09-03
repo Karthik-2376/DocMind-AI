@@ -72,7 +72,7 @@ if st.session_state.processed_files != file_signature:
         st.session_state.vector_store = build_vector_store(all_chunks,embeddings)
         st.session_state.processed_files = file_signature
 
-    st.success(f"Indexed {len(all_chunks)} chunks "f"from {len(uploaded_files)} file(s).")
+    st.success("uploaded successfully")
 
 if st.session_state.current_chat == -1:
     st.session_state.chats.append({"title": "New Chat","messages": []})
