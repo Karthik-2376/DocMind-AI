@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-**DocuRAG** is an AI-powered document question-answering system built using the **Retrieval-Augmented Generation (RAG)** architecture.
+**DocMind-AI** is an AI-powered document question-answering system built using the **Retrieval-Augmented Generation (RAG)** architecture.
 
 The application allows users to:
 
@@ -127,7 +127,7 @@ This allows the model to use information retrieved from the user's documents whe
 
 ---
 
-# How DocuRAG Works
+# How DocMind-AI Works
 
 The complete workflow is:
 
@@ -198,7 +198,7 @@ flowchart TD
 # Project Structure
 
 ```text
-DocuRAG/
+DocMind-AI/
 │
 ├── app.py
 ├── pdf_reader.py
